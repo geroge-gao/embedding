@@ -10,7 +10,8 @@
 
 ## graph embedding
 
-- random walk
 - deepwalk
 - node2vec
+- SDNE
 - eges
+- line
