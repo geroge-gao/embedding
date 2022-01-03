@@ -1,5 +1,6 @@
 import numpy as np
 import tensorflow as tf
+from tensorflow 
 
 
 def get_angles(pos, i, d_model=None):
@@ -14,7 +15,6 @@ def positional_encoding(position, d_model):
 
     # get odd rows
     angle_rads[:, 0::2] = np.sin(angle_rads[:, 0::2])
-    # get even rows
     angle_rads[:, 1::2] = np.cos(angle_rads[:, 1::2])
     # add dimensions to angle
     pos_encoding = angle_rads[np.newaxis, ...]
@@ -30,5 +30,5 @@ def sequence_mask():
 
 
 def scaled_dot_product_attention(q, k, v, mask):
-
+    pass
     

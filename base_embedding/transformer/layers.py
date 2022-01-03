@@ -2,12 +2,13 @@
 # -*- coding: UTF-8 -*-
 
 from tensorflow.keras.layers import Layer
+from tensorflow.keras.layers import LayerNormalization
 
 
-class EncoderLayer(Layer):
+class FFNLayer(Layer):
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self,):
+        pass
 
     
     def build(self, input_shape):
@@ -18,4 +19,10 @@ class EncoderLayer(Layer):
         pass
 
     def compute_output_shape():
+        pass
+
+
+class DecoderLayer(Layer):
+
+    def __init__(self,):
         pass
