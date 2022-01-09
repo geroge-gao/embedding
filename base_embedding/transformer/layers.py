@@ -1,9 +1,12 @@
 # #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+import tensorflow as tf
 from tensorflow.keras.layers import Layer
 from tensorflow.keras.layers import LayerNormalization
-
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.layers import Concatenate
+from attention import Self_Attention
 
 class FFNLayer(Layer):
 
@@ -21,6 +24,26 @@ class FFNLayer(Layer):
     def compute_output_shape():
         pass
 
+
+
+class EncoderLayer(Layer):
+
+    def __init__(self, d_model, num_heads, dff, mask, rate=0.1, ):
+        super(EncoderLayer, self).__init__()
+        self.d_model = d_model
+        self.num_heads = num_heads
+        self.dff = dff
+        self.rate = rate
+        self.attentions = []
+        for i in range(num_heads):
+            self_attention = Self_Attention(self.d_model, name="head_{}".format(i), mask=mask)
+            self.attentions.append(self_attention)
+
+        
+
+    def call(self, inputs, mask):
+        # return super().call(inputs, *args, **kwargs)
+        
 
 class DecoderLayer(Layer):
 
