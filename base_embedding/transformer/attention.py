@@ -1,24 +1,22 @@
 import tensorflow as tf
 from tensorflow.keras.layers import Layer
+from tensorflow.keras.layers import Dense, Dropout, Concatenate
 from tensorflow.keras.initializers import GlorotUniform
 
 
+class SelfAttention(Layer):
 
-
-class Self_Attention(Layer):
-
-    def __init__(self, output_dim, name, mask):
+    def __init__(self, output_dim, name):
         self.name = name
         self.output_dim = output_dim
-
+        self.kernel = None
     
     def build(self, input_shape):
         self.kernel = self.add_weight(name="kernel",
-                                    shape=(3, input_shape[-1], self.output_dim),
-                                    initializer=GlorotUniform,
-                                    trainable=True)
-        return super(Self_Attention, self).build(input_shape)
-
+                                      shape=(3, input_shape[-1], self.output_dim),
+                                      initializer=GlorotUniform,
+                                      trainable=True)
+        return super(SelfAttention, self).build(input_shape)
     
     def call(self, x, mask=None):
         """ 
@@ -37,7 +35,6 @@ class Self_Attention(Layer):
         k_t = tf.transpose(k, perm=[0, 2, 1])
         qk = tf.matmul(q, k_t)
         # scaled_attention_weighhts = [1, sequence_k, sequence_v]
-        # TODO(gerogegao): add mask function
         scaled_attention_weights = tf.nn.softmax(qk/dk, axis=-1)
 
         # add mask
@@ -52,14 +49,30 @@ class Self_Attention(Layer):
         return output
 
     def compute_output_shape(self, input_shape):
-        return (input_shape[0], input_shape[1], self.output_shape)
+        return input_shape[0], self.output_dim
 
 
 class MultiHeadAttention(Layer):
 
-    def __init__(self, ):
-        pass
+    def __init__(self, multi_head_nums, output_dim):
+        self.multi_head_nums = multi_head_nums
+        self.output_dim = output_dim
+        self.attentions = []
 
+        for i in range(multi_head_nums):
+            self.attentions.append(SelfAttention(output_dim))
 
-    def call(self, inputs, *args, **kwargs):
-        return super().call(inputs, *args, **kwargs)
+        self.dense = Dense(output_dim)
+
+    def call(self, inputs):
+        multi_attentions = []
+        for i in range(self.multi_head_nums):
+            multi_attentions.append(self.attentions[i](inputs))
+
+        concat_attention = Concatenate(axis=1)(multi_attentions)
+        output = self.dense(concat_attention)
+        return output
+
+    def compute_output_shape(self, input_shape):
+        return (input_shape[0], input_shape[1], self.output_dim)
+
