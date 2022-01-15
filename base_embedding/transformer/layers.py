@@ -21,10 +21,8 @@ class FFNLayer(Layer):
     def call(self, input_shape):
         pass
 
-    def compute_output_shape():
+    def compute_output_shape(input_shape):
         pass
-
-
 
 class EncoderLayer(Layer):
 
@@ -46,7 +44,6 @@ class EncoderLayer(Layer):
     def call(self, inputs, mask):
         pass
 
-    
     def compute_mask(self, inputs, mask=None):
         if self.mask:
             return tf.not_equal(inputs, 0)

@@ -42,6 +42,9 @@ class Self_Attention(Layer):
 
         # add mask
         if mask is not None:
+            # 将mask转换成int类
+            mask = tf.cast(mask, tf.int32)
+            mask = tf.not_equal(mask, 0)
             scaled_attention_weights += mask * -1e9
         
         output = tf.matmul(scaled_attention_weights, v)

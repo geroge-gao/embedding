@@ -1,6 +1,5 @@
 import numpy as np
 import tensorflow as tf
-from tensorflow 
 
 
 def get_angles(pos, i, d_model=None):
@@ -28,7 +27,4 @@ def padding_mask():
 def sequence_mask():
     pass # TOD
 
-
-def scaled_dot_product_attention(q, k, v, mask):
-    pass
     
