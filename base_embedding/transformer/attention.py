@@ -7,6 +7,7 @@ from tensorflow.keras.initializers import GlorotUniform
 class SelfAttention(Layer):
 
     def __init__(self, output_dim):
+        super(SelfAttention, self).__init__()
         self.output_dim = output_dim
         self.kernel = None
 
@@ -36,8 +37,9 @@ class SelfAttention(Layer):
 
         # calculate qk
         # qk: [batch_size, head_nums, seq_len_q, seq_len_k]
+        dk = x.shape[-1]
         qk = tf.matmul(q, k, transpose_b=True)
-        scaled_attention_weights = qk / self.dk
+        scaled_attention_weights = qk / dk
 
         # add mask
         if mask is not None:
@@ -59,6 +61,7 @@ class SelfAttention(Layer):
 class MultiHeadAttention(Layer):
 
     def __init__(self, multi_head_nums, output_dim):
+        super(MultiHeadAttention, self).__init__()
         self.multi_head_nums = multi_head_nums
         self.dk = output_dim // multi_head_nums
         self.output_dim = output_dim
@@ -66,12 +69,16 @@ class MultiHeadAttention(Layer):
 
         self.dense = Dense(output_dim)
 
-    def call(self, inputs, batch_size):
-        multi_attentions = []
+    def call(self, inputs):
+        batch_size = inputs.shape[0]
+        seq_len = inputs.shape[1]
         # input shape: [batch_size, seq_len, d_model]
         inputs = tf.reshape(inputs, (batch_size, -1, self.multi_head_nums, self.dk))
         # x: [batch_size, head_nums, seq_len, dk]
         x = tf.transpose(inputs, perm=[0, 2, 1, 3])
-        output = self.attention(x)
+        atten = self.attention(x)
+        atten = tf.transpose(atten, perm=[0, 2, 1, 3])
+        concat_atten = tf.reshape(atten, (batch_size, -1, self.output))
+        output = self.dense(concat_atten)
         return output
 

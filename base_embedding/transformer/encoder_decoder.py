@@ -17,7 +17,7 @@ class EncoderLayer(Layer):
 
         self.mha = MultiHeadAttention(head_nums, d_model)
 
-        # define Point wise feed forward network
+        # define point wise feed forward network
         self.ffn1 = Dense(dff)
         self.fnn2 = Dense(d_model, activation="relu")
 
@@ -32,7 +32,9 @@ class EncoderLayer(Layer):
     # def build(self, input_shape):
     #     return input_shape
 
-    def call(self, inputs, *args, **kwargs):
+    def call(self, inputs):
+        # input: [batch_size, seq_len, d_model]
+        # mhd
         attn_output = self.mha(inputs)
         attn_output = self.dropout1(attn_output)
         output_norm1 = self.layernorm1(inputs+attn_output)
