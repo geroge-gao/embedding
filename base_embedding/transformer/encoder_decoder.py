@@ -7,7 +7,7 @@ from .attention import MultiHeadAttention
 
 class EncoderLayer(Layer):
 
-    def __init__(self, head_nums, d_model, dff, rate):
+    def __init__(self, head_nums, d_model, dff, rate=0.1):
         super(EncoderLayer, self).__init__()
 
         self.d_model = d_model
@@ -43,8 +43,8 @@ class EncoderLayer(Layer):
         ffn_output = self.layernorm2(ffn2 + output_norm1)
         return ffn_output
 
-    def compute_output_shape(self, input_shape):
-        return input_shape
+    # def compute_output_shape(self, input_shape):
+    #     return input_shape
 
 
 class DecoderLayer(Layer):
@@ -75,11 +75,14 @@ class DecoderLayer(Layer):
         self.dropout2 = Dropout(rate)
         self.dropout3 = Dropout(rate)
 
-    def build(self, input_shape):
-        return input_shape
+    # def build(self, input_shape):
+    #     return input_shape
 
     def call(self, inputs, *args, **kwargs):
-        attn_output1 = self.mha1(inputs)
+        """
+        Encoder layer of transformer which include three sub layer.
+        """
+        attn_output1 = self.mha1(inputs)  # [batch_size, seq_len, input_dim]
         dropout1 = self.dropout1(attn_output1)
         norm_output1 = self.layernorm1(inputs+dropout1)
 
@@ -94,5 +97,5 @@ class DecoderLayer(Layer):
 
         return norm_output3
 
-    def compute_output_shape(self, input_shape):
-        return input_shape
+    # def compute_output_shape(self, input_shape):
+    #     return input_shape

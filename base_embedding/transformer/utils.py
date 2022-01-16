@@ -8,6 +8,12 @@ def get_angles(pos, i, d_model=None):
 
 
 def positional_encoding(position, d_model):
+    """
+    position encoding
+    Parameters:
+        position: int, max position index
+        d_model: int, embedding output dim
+    """
     angle_rads = get_angles(np.arange(position)[:, np.newaxis],
                             np.arange(d_model)[np.newaxis, :],
                             d_model)
@@ -26,5 +32,3 @@ def padding_mask():
 
 def sequence_mask():
     pass # TOD
-
-    

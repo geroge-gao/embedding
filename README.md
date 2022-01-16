@@ -5,8 +5,8 @@
 - word2vec
 - textcnn
 - fasttext
-- bert
 - transformer
+- bert
 
 ## graph embedding
 

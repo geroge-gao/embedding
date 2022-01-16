@@ -25,10 +25,10 @@ def transformer(d_model, layer_nums, head_nums, dff, input_size, target_size, pe
     """
 
     x = Input(pe_input, )
-    embed = Embedding(input_dim=input_size, output_dim=d_model)(x) # [batch_size, sequence, dim_output]
+    embed = Embedding(input_dim=input_size, output_dim=d_model)(x)  # [batch_size, sequence, dim_output]
     # add position encoding
-    pos_encoding = positional_encoding(pe_input, d_model)
-    embed *= tf.math.sqrt(tf.cast(d_model, tf.float32))
+    pos_encoding = positional_encoding(pe_input, d_model)  # [1, pe_input_dim, d_model]
+    embed *= tf.math.sqrt(tf.cast(d_model, tf.float32))  # batch_size, sequence, d_model]
     embed += pos_encoding
     encoder_input = Dropout(rate)(embed)
 
